@@ -1,0 +1,27 @@
+language: ruby
+
+cache: bundler
+sudo: false
+
+branches:
+  - master
+  - /^v\d+\.\d+(?:\.\d+)?(?:-\S*)?$/
+
+bundler_args: "--without development --with ci"
+
+rvm:
+  - 2.3
+  - 2.4
+  - jruby-9.1.13.0
+  - jruby-9.2.0.0
+  - ruby-head
+  - jruby-head
+
+matrix:
+  include:
+    - rvm: 2.5
+      after_script: "bundle exec codeclimate-test-reporter"
+
+  allow_failures:
+    - rvm: jruby-head
+    - rvm: ruby-head
