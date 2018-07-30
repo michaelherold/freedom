@@ -1,5 +1,13 @@
 # Freedom
 
+[![Build Status](https://travis-ci.org/michaelherold/freedom.svg)][travis]
+[![Code Climate](https://codeclimate.com/github/michaelherold/freedom/badges/gpa.svg)][codeclimate]
+[![Inline docs](http://inch-ci.org/github/michaelherold/freedom.svg?branch=master)][inch]
+
+[codeclimate]: https://codeclimate.com/github/michaelherold/freedom
+[inch]: http://inch-ci.org/github/michaelherold/freedom
+[travis]: https://travis-ci.org/michaelherold/freedom
+
 Freedom is a library that allows you define safe "freedom patches" that extend existing classes, but prevent breakage when you update the library that you're patching and the patch conflicts with the update.
 
 ## Installation
