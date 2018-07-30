@@ -34,14 +34,20 @@ module Freedom
     #
     # @param mod [Module] the base module being defined as a `Freedom::Patch`
     # @return [void]
-    private_class_method def self.define_included_hook(mod)
+    def self.define_included_hook(mod)
       mod.define_singleton_method(:included) do |base|
         if mod.const_defined?(:InstanceMethods)
           methods_mod = mod.const_get(:InstanceMethods)
-          PatchChecker.check_instance_methods(base: base, patch: mod, mod: methods_mod)
+          PatchChecker.check_methods(base: base, patch: mod, mod: methods_mod, methods: base.instance_methods)
           base.include methods_mod
+        end
+        if mod.const_defined?(:ClassMethods)
+          methods_mod = mod.const_get(:ClassMethods)
+          PatchChecker.check_methods(base: base, patch: mod, mod: methods_mod, methods: base.methods)
+          base.extend methods_mod
         end
       end
     end
+    private_class_method :define_included_hook
   end
 end
