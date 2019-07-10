@@ -11,12 +11,12 @@ module Freedom
     # @api private
     #
     # @param base [Class, Module] the base class or module to be patched
-    # @param conflicting_method [Symbol] name of the conflicting method
-    # @param defining_module [Module] the module that defines the conflicting method
-    def initialize(base, conflicting_method, defining_module)
+    # @param conflicts [Symbol] name of the conflicting method(s)
+    # @param owner [Class, Module] the class or module that owns the conflict
+    def initialize(base, conflicts, owner)
       self.base = base
-      self.conflicting_method = conflicting_method
-      self.defining_module = defining_module
+      self.conflicts = conflicts.map { |conflict| "`#{conflict}'" }.join(', ')
+      self.owner = owner
     end
 
     # The descriptive message for the exception
@@ -25,8 +25,7 @@ module Freedom
     #
     # @return [String] the explanation for what caused the exception to be raised
     def message
-      "#{base} already defines method `#{conflicting_method}', " \
-      "which is trying to be redefined by #{defining_module}"
+      "#{base} already defines #{conflicts}, also defined on #{owner}"
     end
 
     private
@@ -37,16 +36,16 @@ module Freedom
     # @return [Class, Module]
     attr_accessor :base
 
-    # The method that is already defined on the base
+    # The methods that are already defined on the base
     #
     # @api private
-    # @return [Symbol]
-    attr_accessor :conflicting_method
+    # @return [String]
+    attr_accessor :conflicts
 
-    # The module that is defining the conflicting method
+    # The module that owns the conflicting method
     #
     # @api private
     # @return [Module]
-    attr_accessor :defining_module
+    attr_accessor :owner
   end
 end

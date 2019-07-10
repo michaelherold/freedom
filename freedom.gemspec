@@ -9,7 +9,14 @@ Gem::Specification.new do |spec|
   spec.email   = ['opensource@michaeljherold.com']
 
   spec.summary     = 'Safe freedom patches for all'
-  spec.description = spec.summary
+  spec.description = <<-DESC.gsub(/[[:space:]]+/, ' ').strip
+    Freedom gives you tools to liberally build monkey patches for your application
+    in a safe way that prevents you from overriding methods that you do not intend
+    to override. This makes it easier for you to introduce a fix to library code
+    without the danger that a later upgrade can break the monkey patch.
+
+    Safe monkey patches == freedom patches!
+  DESC
   spec.homepage    = 'https://github.com/michaelherold/freedom'
   spec.license     = 'MIT'
 
