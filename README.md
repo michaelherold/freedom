@@ -28,7 +28,74 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Defining a freedom patch is a simple affair. Currently, you have two options, depending on which type of methods you want to check against: instance methods or class methods.
+
+### Checking for collisions with instance methods
+
+To check a freedom patch's methods against the instance methods of its includer, define the patch like so:
+
+```ruby
+module Quacking
+  extend Freedom::Patch.(:instance_method)
+
+  def quack
+    'quack from Quacking'
+  end
+end
+```
+
+Once you've done so, `include` the module just like you would a traditional Ruby patch:
+
+```ruby
+class Duck
+  include Quacking
+end
+```
+
+### Checking for collisions with class methods
+
+To check a freedom patch's methods against the class methods of its extender, define the patch like so:
+
+```ruby
+module ClassIntrospection
+  extend Freedom::Patch.(:class_method)
+
+  def methods_with_owners
+    methods
+      .group_by { |method_name| method(method_name).owner }
+  end
+end
+```
+
+After that, you can `extend` a class just like you normally would:
+
+```ruby
+class Integer
+  extend ClassIntrospection
+end
+```
+
+### Important Note
+
+Freedom patches are intended only to protect you when you are monkey-patching code that already exists. They currently _will not_ protect you if you include a module and then later redefine the method, like the following example:
+
+```ruby
+module Quacking
+  extend Freedom::Patch.(:instance_method)
+
+  def quack
+    'quack'
+  end
+end
+
+class Duck
+  include Quacking
+
+  def quack
+    'quack from Duck'
+  end
+end
+```
 
 ## Contributing
 
