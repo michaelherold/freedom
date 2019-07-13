@@ -56,50 +56,35 @@ module Freedom
     def self.call(method_type = :instance_method)
       Module.new.tap do |patch|
         case method_type
-        when :class_method
-          patch.define_singleton_method(:extended, &method(:define_extended_hook))
-        else
-          patch.define_singleton_method(:extended, &method(:define_included_hook))
+        when :class_method then define_hook(patch, :extended, method_type: :method)
+        else define_hook(patch, :included, method_type: :instance_method)
         end
       end
     end
 
-    # Adds an included hook to the extended module for adding instance methods
+    # Adds an hook to the patch for checking a specific type of method
     #
+    # @private
     # @api private
     #
-    # @param mod [Module] the base module being defined as a `Freedom::Patch`
+    # @param patch [Module] the base module being defined as a `Freedom::Patch`
+    # @param hook_name [Symbol] the hook to define, one of :extended or :included
+    # @param method_type [Symbol] the type of method to check, one of
+    #   :instance_method or :method
     # @return [void]
-    def self.define_included_hook(mod)
-      mod.define_singleton_method(:included) do |base|
-        conflicts = PatchChecker.check_methods(
-          base,
-          against: mod,
-          method_type: :instance_method
-        )
+    def self.define_hook(patch, hook_name, method_type:)
+      patch.define_singleton_method(:extended) do |mod|
+        mod.define_singleton_method(hook_name) do |base|
+          conflicts = PatchChecker.check_methods(
+            base,
+            against: mod,
+            method_type: method_type
+          )
 
-        raise Freedom::IncompatiblePatch.new(base, conflicts, mod) if conflicts.any?
+          raise Freedom::IncompatiblePatch.new(base, conflicts, mod) if conflicts.any?
+        end
       end
     end
-    private_class_method :define_included_hook
-
-    # Adds an extended hook to the extended module for adding singleton methods
-    #
-    # @api private
-    #
-    # @param mod [Module] the base module being defined as a `Freedom::SingletonPatch`
-    # @return [void]
-    def self.define_extended_hook(mod)
-      mod.define_singleton_method(:extended) do |base|
-        conflicts = PatchChecker.check_methods(
-          base,
-          against: mod,
-          method_type: :method
-        )
-
-        raise Freedom::IncompatiblePatch.new(base, conflicts, mod) if conflicts.any?
-      end
-    end
-    private_class_method :define_extended_hook
+    private_class_method :define_hook
   end
 end
