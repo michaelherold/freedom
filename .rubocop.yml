@@ -4,9 +4,14 @@ AllCops:
     - "Guardfile"
     - "Rakefile"
     - "*.gemspec"
+    - "spec/**.rb"
   Exclude:
     - "tmp/**/*"
   TargetRubyVersion: 2.3
+
+Layout/EmptyLineBetweenDefs:
+  Exclude:
+    - "spec/patch_spec.rb"
 
 Metrics/AbcSize:
   Description: A calculated magnitude based on number of assignments, branches, and
@@ -33,3 +38,14 @@ Metrics/MethodLength:
   Exclude:
     - "Rakefile"
     - "spec/**/*_spec.rb"
+
+Style/LambdaCall:
+  EnforcedStyle: braces
+
+Style/Semicolon:
+  Exclude:
+    - "spec/patch_spec.rb"
+
+Style/SingleLineMethods:
+  Exclude:
+    - "spec/patch_spec.rb"

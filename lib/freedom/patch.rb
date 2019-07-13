@@ -11,43 +11,42 @@ module Freedom
   # Note that you currently cannot define a freedom patch that defines both
   # instance and class methods. `Module.include` and `Method.extend` do not
   # naturally allow you to handle both.
-  #
-  # @api public
-  #
-  # @example Creates a patch that adds the `#quack` method.
-  #   module Quacking
-  #     extend Freedom::Patch.(:instance_method)
-  #
-  #     def quack
-  #       'quack'
-  #     end
-  #   end
-  #
-  #   class Duck
-  #     include Quacking
-  #   end
-  #
-  #   duck = Duck.new
-  #   duck.quack  #=> 'quack'
-  #
-  # @example Creates a patch that adds class introspection.
-  #   module ClassIntrospection
-  #     extend Freedom::Patch.(:class_method)
-  #
-  #     def methods_with_owners
-  #       methods
-  #         .group_by { |method_name| method(method_name).owner }
-  #     end
-  #   end
-  #
-  #   Integer.extend ClassIntrospection
-  #   Integer.methods_with_owners
   module Patch
-    # Builds a freedom patch for the given method type. This patch can safely
-    # monkey-patch a module or class and ensure that none of the methods
-    # conflict with methods already defined on the base.
+    # Builds a freedom patch for the given method type
+    #
+    # This patch can safely monkey-patch a module or class and ensure that none
+    # of the methods conflict with methods already defined on the base.
     #
     # @api public
+    #
+    # @example Creates a patch that adds the `#quack` method.
+    #   module Quacking
+    #     extend Freedom::Patch.(:instance_method)
+    #
+    #     def quack
+    #       'quack'
+    #     end
+    #   end
+    #
+    #   class Duck
+    #     include Quacking
+    #   end
+    #
+    #   duck = Duck.new
+    #   duck.quack  #=> 'quack'
+    #
+    # @example Creates a patch that adds class introspection.
+    #   module ClassIntrospection
+    #     extend Freedom::Patch.(:class_method)
+    #
+    #     def methods_with_owners
+    #       methods
+    #         .group_by { |method_name| method(method_name).owner }
+    #     end
+    #   end
+    #
+    #   Integer.extend ClassIntrospection
+    #   Integer.methods_with_owners
     #
     # @param method_type [Symbol] the type of methods to check against the
     #   freedom patch, one of :instance_method or :class_method
