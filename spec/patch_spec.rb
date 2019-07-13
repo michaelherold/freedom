@@ -93,7 +93,10 @@ RSpec.describe Freedom::Patch do
         end
 
         expect { klass.extend ConflictOnSelfFooAndSelfBar }.to(
-          raise_error(Freedom::IncompatiblePatch, /(?:foo).*(?:bar)/)
+          raise_error(Freedom::IncompatiblePatch)
+            .with_message(
+              "#{klass.inspect} already defines `foo', `bar', also defined on ConflictOnSelfFooAndSelfBar"
+            )
         )
       end
     end

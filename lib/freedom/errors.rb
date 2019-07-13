@@ -19,6 +19,11 @@ module Freedom
       self.owner = owner
     end
 
+    # @private
+    def inspect
+      "#<#{self.class.name}: #{message}>"
+    end
+
     # The descriptive message for the exception
     #
     # @api private
