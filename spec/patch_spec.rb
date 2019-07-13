@@ -44,7 +44,13 @@ RSpec.describe Freedom::Patch do
         end
 
         expect { klass.include ConflictOnFooAndBar }.to(
-          raise_error(Freedom::IncompatiblePatch, /(?:foo).*(?:bar)/)
+          raise_error(Freedom::IncompatiblePatch)
+            .with_message(
+              Regexp.new(
+                "#{klass.inspect} already defines (?:`bar', `foo'|`foo', `bar'), " \
+                'also defined on ConflictOnFooAndBar'
+              )
+            )
         )
       end
     end
@@ -93,7 +99,13 @@ RSpec.describe Freedom::Patch do
         end
 
         expect { klass.extend ConflictOnSelfFooAndSelfBar }.to(
-          raise_error(Freedom::IncompatiblePatch, /(?:foo).*(?:bar)/)
+          raise_error(Freedom::IncompatiblePatch)
+            .with_message(
+              Regexp.new(
+                "#{klass.inspect} already defines (?:`bar', `foo'|`foo', `bar'), " \
+                'also defined on ConflictOnSelfFooAndSelfBar'
+              )
+            )
         )
       end
     end
