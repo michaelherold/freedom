@@ -10,18 +10,16 @@ branches:
 bundler_args: "--without development --with ci"
 
 rvm:
-  - 2.3
   - 2.4
-  - jruby-9.1.13.0
-  - jruby-9.2.0.0
+  - 2.5
+  - 2.6
   - ruby-head
-  - jruby-head
+  - jruby-9.2.7.0
 
 matrix:
   include:
-    - rvm: 2.5
+    - rvm: 2.6
       after_script: "bundle exec codeclimate-test-reporter"
 
   allow_failures:
-    - rvm: jruby-head
     - rvm: ruby-head
