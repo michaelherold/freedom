@@ -14,22 +14,15 @@ group :development do
   gem 'guard-rubocop'
   gem 'guard-yard'
   gem 'inch'
+  gem 'pry'
   gem 'rubocop', '0.58.2'
   gem 'yard', '~> 0.9'
-  gem 'yard-doctest'
   gem 'yardstick'
 
   group :test do
-    gem 'pry'
     gem 'rake'
+    gem 'rspec', '~> 3.6'
+    gem 'simplecov', require: false
+    gem 'yard-doctest'
   end
-end
-
-group :ci do
-  gem 'codeclimate-test-reporter', require: false
-  gem 'simplecov', require: false
-end
-
-group :test do
-  gem 'rspec', '~> 3.6'
 end

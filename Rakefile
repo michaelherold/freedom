@@ -4,9 +4,11 @@ require 'bundler/gem_tasks'
 
 # Defines a Rake task if the optional dependency is installed
 #
+# @param disabled [Boolean] when truthy, do not run the block
+#
 # @return [nil]
-def with_optional_dependency
-  yield if block_given?
+def with_optional_dependency(disabled = false)
+  yield if block_given? && !disabled
 rescue LoadError # rubocop:disable Lint/HandleExceptions
 end
 
@@ -34,7 +36,7 @@ with_optional_dependency do
   default << 'rubocop'
 end
 
-with_optional_dependency do
+with_optional_dependency(ENV['CI']) do
   require 'yard/rake/yardoc_task'
   YARD::Rake::YardocTask.new(:yard)
 
@@ -48,20 +50,26 @@ with_optional_dependency do
   default << 'inch'
 end
 
-with_optional_dependency do
+with_optional_dependency(ENV['CI']) do
   require 'yardstick/rake/measurement'
-  options = YAML.load_file('.yardstick.yml')
-  Yardstick::Rake::Measurement.new(:yardstick_measure, options) do |measurement|
-    measurement.output = 'coverage/docs.txt'
-  end
-
   require 'yardstick/rake/verify'
-  options = YAML.load_file('.yardstick.yml')
-  Yardstick::Rake::Verify.new(:yardstick_verify, options) do |verify|
-    verify.threshold = 100
+
+  namespace :yardstick do
+    options = YAML.load_file('.yardstick.yml')
+
+    Yardstick::Rake::Measurement.new(:measure, options) do |measurement|
+      measurement.output = 'coverage/docs.txt'
+    end
+
+    Yardstick::Rake::Verify.new(:verify, options) do |verify|
+      verify.threshold = 100
+    end
   end
 
-  task yardstick: %i[yardstick_measure yardstick_verify]
+  desc 'Measure and verify the amount of documentation coverage'
+  task yardstick: %w[yardstick:measure yardstick:verify]
+
+  default << 'yardstick'
 end
 
 task default: default

@@ -19,7 +19,12 @@ module Freedom
       self.owner = owner
     end
 
+    # Formats the error for debugging purposes
+    #
+    # @api private
     # @private
+    #
+    # @return [String]
     def inspect
       "#<#{self.class.name}: #{message}>"
     end
