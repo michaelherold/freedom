@@ -107,7 +107,7 @@ GEM
     thor (0.20.0)
     tins (1.16.3)
     unicode-display_width (1.4.0)
-    yard (0.9.15)
+    yard (0.9.20)
     yard-doctest (0.1.12)
       minitest
       yard
@@ -138,4 +138,4 @@ DEPENDENCIES
   yardstick
 
 BUNDLED WITH
-   1.16.2
+   1.17.3
